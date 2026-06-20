@@ -59,7 +59,7 @@ export const SITE: SiteConfig = {
     name: 'Ravi Kumar Singh',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: avatarImg,
-    bio: 'Linux enthusiast and open-source advocate.',
+    bio: 'AI & open source enthusiast. 15+ years in software engineering.',
   },
   /** Default OG image. */
   defaultOgImage: ogDefaultImg.src,
