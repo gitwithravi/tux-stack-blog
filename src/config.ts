@@ -148,6 +148,11 @@ export const SOCIALS: readonly SocialLink[] = [
     href: `mailto:${CONTACT_EMAIL}`,
     icon: 'lucide:mail',
   },
+  {
+    label: 'LinkedIn',
+    href: 'https://in.linkedin.com/in/rksinghonline',
+    icon: 'simple-icons:linkedin',
+  },
   { label: 'RSS', href: '/rss.xml', icon: 'lucide:rss' },
 ].filter(Boolean) as SocialLink[];
 
