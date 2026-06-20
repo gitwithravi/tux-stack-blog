@@ -232,15 +232,15 @@ I do not need a generic agent that can theoretically do anything.
 
 I need a specific assistant that understands my systems:
 
-* VITyarthi
-* admissions infrastructure
-* support tickets
-* internal servers
+* LMS Platform
+* Application infrastructure
+* Support tickets
+* Internal servers
 * GitHub repositories
-* monitoring dashboards
-* invoice emails
-* operational routines
-* my preferred approval flow
+* Monitoring dashboards
+* Invoice emails
+* Operational routines
+* My preferred approval flow
 
 That kind of assistant is not created by installing a framework.
 
