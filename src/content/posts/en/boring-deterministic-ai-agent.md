@@ -2,6 +2,8 @@
 title: 'I Tried Building My AI Agent With Existing Agent Frameworks. Then I Chose the Boring Deterministic Way.'
 description: 'After evaluating multiple AI agent frameworks, I found that deterministic automation with an LLM inside beats magic autonomy for real operational work.'
 pubDate: 2026-06-20
+updatedDate: 2026-06-21
+heroImage: '../../../assets/images/posts/deterministic-ai.png'
 categories: ['AI']
 tags: ['ai-agents', 'automation', 'deterministic-systems', 'llm', 'marvin']
 pinned: false
