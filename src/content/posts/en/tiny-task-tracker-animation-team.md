@@ -2,6 +2,8 @@
 title: 'I Built a Tiny Task Tracker Because Jira Was Too Much for My Animation Team'
 description: 'When Jira, ClickUp, and OpenProject overwhelmed a non-technical creative team, I built a lightweight custom app focused on backlog pull, visibility, and simplicity.'
 pubDate: 2026-06-20
+updatedDate: 2026-06-21
+heroImage: '../../../assets/images/posts/simple-task-tracker.png'
 categories: ['Engineering']
 tags: ['task-tracker', 'project-management', 'internal-tools', 'agile', 'team-productivity']
 pinned: false
