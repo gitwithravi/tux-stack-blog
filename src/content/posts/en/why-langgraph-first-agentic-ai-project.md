@@ -177,14 +177,14 @@ And the mental model is what survives framework churn.
 
 From a learning perspective, I would divide the popular choices like this:
 
-| Tool / Framework | Best For | Learning Value | Main Tradeoff |
-| --- | --- | --- | --- |
-| n8n | Fast workflow automation, non-developers, internal tools | Medium | You learn workflows more than agent internals |
-| Mastra | TypeScript developers who want to build quickly | Medium to High | Higher-level abstractions can hide core mechanics |
-| LangChain Agents | Quick agent setup with common patterns | Medium | Easier start, but less explicit control than LangGraph |
-| LangGraph | Developers who want to understand agent architecture deeply | Very High | More initial effort |
-| CrewAI / AutoGen-style frameworks | Multi-agent experiments and role-based agent demos | Medium | Can encourage overusing "multiple agents" before understanding control flow |
-| Custom code from scratch | Maximum understanding | Very High | Easy to waste time rebuilding solved problems |
+| Tool / Framework                  | Best For                                                    | Learning Value | Main Tradeoff                                                               |
+| --------------------------------- | ----------------------------------------------------------- | -------------- | --------------------------------------------------------------------------- |
+| n8n                               | Fast workflow automation, non-developers, internal tools    | Medium         | You learn workflows more than agent internals                               |
+| Mastra                            | TypeScript developers who want to build quickly             | Medium to High | Higher-level abstractions can hide core mechanics                           |
+| LangChain Agents                  | Quick agent setup with common patterns                      | Medium         | Easier start, but less explicit control than LangGraph                      |
+| LangGraph                         | Developers who want to understand agent architecture deeply | Very High      | More initial effort                                                         |
+| CrewAI / AutoGen-style frameworks | Multi-agent experiments and role-based agent demos          | Medium         | Can encourage overusing "multiple agents" before understanding control flow |
+| Custom code from scratch          | Maximum understanding                                       | Very High      | Easy to waste time rebuilding solved problems                               |
 
 For a first learning project, I would not start with a complex multi-agent system.
 

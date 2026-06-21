@@ -5,7 +5,16 @@ pubDate: 2026-06-20
 updatedDate: 2026-06-21
 heroImage: '../../../assets/images/posts/no-need-for-frotier-llm.png'
 categories: ['AI']
-tags: ['ai-coding', 'llm', 'frontier-models', 'opencode', 'claude-code', 'developer-tools', 'productivity']
+tags:
+  [
+    'ai-coding',
+    'llm',
+    'frontier-models',
+    'opencode',
+    'claude-code',
+    'developer-tools',
+    'productivity',
+  ]
 pinned: false
 ---
 

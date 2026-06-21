@@ -125,14 +125,14 @@ export async function getPostBySlug(locale: Locale, slug: string): Promise<Post 
 
 /** All translation siblings of a post (other locales sharing translationKey). */
 export async function getTranslations(entry: Post): Promise<Record<Locale, Post | undefined>> {
-  const out: Partial<Record<Locale, Post | undefined>> = {};
-  for (const locale of SITE.locales) {
-    if (locale === entry.data.lang) {
-      out[locale] = entry;
+  const out: Record<string, Post | undefined> = {};
+  for (const l of SITE.locales as readonly string[]) {
+    if (l === entry.data.lang) {
+      out[l] = entry;
       continue;
     }
-    const all = await getPosts(locale);
-    out[locale] = all.find((p) => p.data.translationKey === entry.data.translationKey);
+    const all = await getPosts(l as Locale);
+    out[l] = all.find((p) => p.data.translationKey === entry.data.translationKey);
   }
   return out as Record<Locale, Post | undefined>;
 }
@@ -168,7 +168,7 @@ export async function getCategoriesWithCount(
 /** Group posts by year -> month for the archives page. */
 export function groupByYearMonth(
   posts: Post[],
-  locale: Locale,
+  _locale: Locale,
 ): Array<{
   year: number;
   months: Array<{ month: number; label: string; posts: Post[] }>;
@@ -184,8 +184,7 @@ export function groupByYearMonth(
     if (!months.has(m)) months.set(m, []);
     months.get(m)!.push(post);
   }
-  const lang = locale === 'fr' ? 'fr-FR' : 'en-US';
-  const fmt = new Intl.DateTimeFormat(lang, { month: 'long' });
+  const fmt = new Intl.DateTimeFormat('en-US', { month: 'long' });
   return Array.from(buckets.entries())
     .sort((a, b) => b[0] - a[0])
     .map(([year, months]) => ({

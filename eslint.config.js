@@ -19,6 +19,7 @@ export default [
       '@typescript-eslint': tseslint,
     },
     rules: {
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
     },
@@ -30,6 +31,7 @@ export default [
       'jsx-a11y': jsxA11y,
     },
     rules: {
+      'no-unused-vars': 'off',
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/anchor-has-content': 'warn',
     },

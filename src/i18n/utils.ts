@@ -3,8 +3,7 @@
  * i18n utilities.
  *
  * Routing rules:
- *  - EN is the default locale and serves at the URL root with NO prefix.
- *  - FR is served under `/fr/...`.
+ *  - EN is the default (and only) locale, served at the URL root with NO prefix.
  *
  * Source-of-truth: `src/config.ts` -> SITE.locales / SITE.defaultLocale.
  */
@@ -99,7 +98,7 @@ export function stripLocale(pathname: string): string {
  *   const t = useTranslations('fr');
  *   t('nav.home') // 'Accueil'
  */
-// eslint-disable-next-line no-unused-vars
+
 export function useTranslations(locale: Locale): (key: UIKey) => string {
   return function t(key: UIKey): string {
     const dict = messages[locale] ?? messages[DEFAULT_LOCALE];
@@ -112,14 +111,13 @@ export function useTranslations(locale: Locale): (key: UIKey) => string {
  */
 export function formatDate(
   date: Date | string,
-  locale: Locale,
+  _locale: Locale,
   options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' },
 ): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (Number.isNaN(d.getTime())) return '';
   if (SITE.isoDates) return d.toISOString().slice(0, 10);
-  const lang = locale === 'fr' ? 'fr-FR' : 'en-US';
-  return new Intl.DateTimeFormat(lang, options).format(d);
+  return new Intl.DateTimeFormat('en-US', options).format(d);
 }
 
 /** Short ISO 8601 date used for <time datetime="..."> attributes. */
@@ -166,23 +164,11 @@ export function canonicalUrl(pathname: string): string {
 }
 
 /** Pretty label for the language switcher. */
-export function localeLabel(locale: Locale): string {
-  switch (locale) {
-    case 'fr':
-      return 'Français';
-    case 'en':
-    default:
-      return 'English';
-  }
+export function localeLabel(_locale: Locale): string {
+  return 'English';
 }
 
 /** ISO BCP 47 language tag for `<html lang>` and date formatters. */
-export function htmlLang(locale: Locale): string {
-  switch (locale) {
-    case 'fr':
-      return 'fr-FR';
-    case 'en':
-    default:
-      return 'en-US';
-  }
+export function htmlLang(_locale: Locale): string {
+  return 'en-US';
 }

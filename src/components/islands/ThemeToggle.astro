@@ -74,7 +74,6 @@ const t = useTranslations(locale);
 
     const transition = (
       document as unknown as {
-        // eslint-disable-next-line no-unused-vars
         startViewTransition: (cb: () => void) => { finished: Promise<void> };
       }
     ).startViewTransition(() => {

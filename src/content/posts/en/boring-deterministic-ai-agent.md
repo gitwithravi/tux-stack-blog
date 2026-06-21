@@ -17,14 +17,14 @@ My goal was simple enough.
 
 I wanted to build **MARVIN**, a personal/work assistant that could help with my actual operational life:
 
-* check servers and websites
-* review pull requests
-* summarize invoices
-* monitor internal systems
-* draft support ticket responses
-* integrate with LMS APIs
-* give me daily or scheduled reports
-* eventually coordinate small workflows across tools
+- check servers and websites
+- review pull requests
+- summarize invoices
+- monitor internal systems
+- draft support ticket responses
+- integrate with LMS APIs
+- give me daily or scheduled reports
+- eventually coordinate small workflows across tools
 
 In other words, I did not want a chatbot.
 
@@ -40,12 +40,12 @@ There are frameworks, harnesses, CLIs, MCP-compatible tools, hosted agent platfo
 
 I evaluated and experimented with tools and approaches like:
 
-* **hermes-agent**
-* **zero-claw**
-* **moltis**
-* **vellum**
-* **Claude Code as a harness**
-* and a few other agent-style workflows
+- **hermes-agent**
+- **zero-claw**
+- **moltis**
+- **vellum**
+- **Claude Code as a harness**
+- and a few other agent-style workflows
 
 Each of them had something interesting.
 
@@ -95,13 +95,13 @@ A harness like Claude Code is designed to be flexible. That flexibility is usefu
 
 For example:
 
-* A scheduled task might take more steps than expected.
-* A simple check could turn into a long reasoning chain.
-* Token usage becomes harder to predict.
-* Failure modes become less obvious.
-* Debugging becomes "what did the agent decide to do this time?"
-* Cost control becomes harder.
-* The agent may solve the problem, but not always in the same way.
+- A scheduled task might take more steps than expected.
+- A simple check could turn into a long reasoning chain.
+- Token usage becomes harder to predict.
+- Failure modes become less obvious.
+- Debugging becomes "what did the agent decide to do this time?"
+- Cost control becomes harder.
+- The agent may solve the problem, but not always in the same way.
 
 For one-off tasks, that is acceptable.
 
@@ -115,18 +115,18 @@ The other issue I kept running into was abstraction.
 
 Agent frameworks often introduce concepts like:
 
-* agents
-* tools
-* skills
-* memory
-* planners
-* evaluators
-* routers
-* graphs
-* reflection loops
-* state machines
-* human-in-the-loop approvals
-* multi-agent collaboration
+- agents
+- tools
+- skills
+- memory
+- planners
+- evaluators
+- routers
+- graphs
+- reflection loops
+- state machines
+- human-in-the-loop approvals
+- multi-agent collaboration
 
 All of these are valid concepts.
 
@@ -161,15 +161,15 @@ The hard part is not making the model smarter.
 
 The hard part is making the system:
 
-* predictable
-* observable
-* debuggable
-* cheap enough to run regularly
-* safe with permissions
-* easy to pause
-* easy to inspect
-* easy to retry
-* specific to my workflows
+- predictable
+- observable
+- debuggable
+- cheap enough to run regularly
+- safe with permissions
+- easy to pause
+- easy to inspect
+- easy to retry
+- specific to my workflows
 
 A general-purpose agent gives you breadth.
 
@@ -189,16 +189,16 @@ It should start as a **deterministic AI-assisted automation system**.
 
 That means:
 
-* cron jobs trigger known workflows
-* each workflow has explicit steps
-* scripts do the boring deterministic work
-* APIs and MCP tools are called in controlled ways
-* the LLM is used only where language, reasoning, summarization, or judgment is actually useful
-* outputs are saved to a dashboard
-* sensitive actions require approval
-* every run is logged
-* failures are visible
-* cost is predictable
+- cron jobs trigger known workflows
+- each workflow has explicit steps
+- scripts do the boring deterministic work
+- APIs and MCP tools are called in controlled ways
+- the LLM is used only where language, reasoning, summarization, or judgment is actually useful
+- outputs are saved to a dashboard
+- sensitive actions require approval
+- every run is logged
+- failures are visible
+- cost is predictable
 
 In this model, the LLM is not the whole application.
 
@@ -234,15 +234,15 @@ I do not need a generic agent that can theoretically do anything.
 
 I need a specific assistant that understands my systems:
 
-* LMS Platform
-* Application infrastructure
-* Support tickets
-* Internal servers
-* GitHub repositories
-* Monitoring dashboards
-* Invoice emails
-* Operational routines
-* My preferred approval flow
+- LMS Platform
+- Application infrastructure
+- Support tickets
+- Internal servers
+- GitHub repositories
+- Monitoring dashboards
+- Invoice emails
+- Operational routines
+- My preferred approval flow
 
 That kind of assistant is not created by installing a framework.
 
@@ -276,12 +276,12 @@ Most of the workflow should be boring.
 
 The LLM should enter only at the points where boring code becomes brittle:
 
-* summarizing messy information
-* drafting human-readable messages
-* classifying ambiguous input
-* explaining unusual failures
-* deciding whether something needs attention
-* converting raw data into a useful report
+- summarizing messy information
+- drafting human-readable messages
+- classifying ambiguous input
+- explaining unusual failures
+- deciding whether something needs attention
+- converting raw data into a useful report
 
 That is the sweet spot.
 
@@ -289,15 +289,15 @@ That is the sweet spot.
 
 The direction I settled on is:
 
-* simple scheduled scripts
-* explicit workflow definitions
-* structured logs
-* dashboard-first visibility
-* MCP/API integrations where useful
-* LLM calls only at decision or language points
-* approval before external actions
-* deterministic execution by default
-* autonomy added slowly, only where it proves useful
+- simple scheduled scripts
+- explicit workflow definitions
+- structured logs
+- dashboard-first visibility
+- MCP/API integrations where useful
+- LLM calls only at decision or language points
+- approval before external actions
+- deterministic execution by default
+- autonomy added slowly, only where it proves useful
 
 In other words:
 
