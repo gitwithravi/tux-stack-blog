@@ -2,6 +2,8 @@
 title: 'Not Everyone Needs Frontier LLMs for Coding'
 description: 'Frontier models are brilliant, but many everyday coding tasks run just fine on smaller models — if your workflow is clear. Stop buying the hype and choose tools for your actual use case.'
 pubDate: 2026-06-20
+updatedDate: 2026-06-21
+heroImage: '../../../assets/images/posts/no-need-for-frotier-llm.png'
 categories: ['AI']
 tags: ['ai-coding', 'llm', 'frontier-models', 'opencode', 'claude-code', 'developer-tools', 'productivity']
 pinned: false
