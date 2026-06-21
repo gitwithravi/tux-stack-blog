@@ -23,7 +23,7 @@ import { SITE } from './src/config';
 
 const rawBase = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
 const BASE = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
-const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
+const SITEMAP_XSL_HREF = BASE === '/' ? '/sitemap/styles.xsl' : `${BASE}/sitemap/styles.xsl`;
 const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
 
 /**
