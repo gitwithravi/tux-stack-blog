@@ -11,7 +11,6 @@
  */
 /* global Response */
 import type { GetStaticPaths } from 'astro';
-import { generateOgImage } from '../../utils/og-image';
 import { getPosts, postSlug, type Post } from '../../utils/posts';
 import { SITE, type Locale } from '../../config';
 import { formatDate } from '../../i18n/utils';
@@ -45,6 +44,7 @@ interface Props {
 
 export async function GET({ props }: { props: Props }) {
   const { post, locale } = props;
+  const { generateOgImage } = await import('../../utils/og-image');
 
   const date = post.data.pubDate ? formatDate(post.data.pubDate, locale) : undefined;
 

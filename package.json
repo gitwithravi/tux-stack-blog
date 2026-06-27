@@ -12,6 +12,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build && bun run pagefind",
+    "build:cloudflare": "CI_SKIP_AUTO_OG_IMAGE=true astro build && bun run pagefind",
     "preview": "astro preview",
     "serve": "bun run build && bun preview",
     "astro": "astro",

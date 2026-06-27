@@ -819,7 +819,7 @@ copy-to-clipboard buttons.
 
 The build output (`dist/`) is fully static and works on:
 
-- **Cloudflare Pages**: build command `bun run build`, output `dist`.
+- **Cloudflare Pages**: build command `bun run build:cloudflare`, output `dist`.
 - **Netlify**: same. Add a `_redirects` file if you need locale
   redirects.
 - **Vercel**: framework preset "Astro", install `bun install`, build
@@ -968,7 +968,10 @@ favicons, images, internal links) gets prefixed correctly.
 For Cloudflare Pages / Netlify / Vercel / S3, the workflow is
 simpler — there's no sub-path, so leave `BASE_PATH` empty and just
 expose the same `SITE_URL` and `PUBLIC_*` values through the host's
-build-environment UI. A minimal Cloudflare Pages action looks like:
+build-environment UI. Cloudflare Pages should use `bun run build:cloudflare`
+so the static build skips native Resvg-based auto-OG image generation,
+which is not compatible with Cloudflare's Workers bundling path. A minimal
+Cloudflare Pages action looks like:
 
 ```yaml title=".github/workflows/cloudflare.yml"
 name: Deploy
@@ -981,7 +984,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with: { bun-version: latest }
       - run: bun install --frozen-lockfile
-      - run: bun run build
+      - run: bun run build:cloudflare
         env:
           SITE_URL: https://your-domain.com
           PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE }}
