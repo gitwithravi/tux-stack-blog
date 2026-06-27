@@ -1,5 +1,5 @@
 import process from 'node:process';
-import avatarImg from './assets/images/site/ravi.png';
+import avatarImg from './assets/images/site/logctlavatar.png';
 import ogDefaultImg from './assets/images/site/og-default.svg';
 import type { SiteConfig, NavItem, SocialLink, GiscusConfig } from './types/config';
 
@@ -50,16 +50,15 @@ export const SITE: SiteConfig = {
   // ==========================================
 
   /** Default site title used as homepage <title> and meta. */
-  title: 'TuxStack',
+  title: 'logctl_',
   /** Site tagline / description. */
-  description:
-    'A blog about Linux, open-source, and the technology stack that powers the modern world.',
+  description: 'A control interface for engineering thoughts.',
   /** Author/handle shown in footer + meta. */
   author: {
     name: 'Ravi Kumar Singh',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: avatarImg,
-    bio: 'AI & open source enthusiast. 15+ years in software engineering.',
+    bio: 'A control interface for engineering thoughts.',
   },
   /** Default OG image. */
   defaultOgImage: ogDefaultImg.src,

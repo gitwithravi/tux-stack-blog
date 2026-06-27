@@ -1,5 +1,5 @@
 ---
-title: 'Welcome to TuxStack'
+title: 'Welcome to logctl'
 description: 'Kicking off the blog with thoughts on the AI landscape and what is to come.'
 pubDate: 2026-06-20
 categories: ['AI']
@@ -9,7 +9,7 @@ pinned: true
 
 ## Hello, world!
 
-Welcome to **TuxStack** — a blog about Linux, open-source, and the technology
+Welcome to **logctl** — a blog about Linux, open-source, and the technology
 stack that powers the modern world.
 
 AI is reshaping how we build, deploy, and interact with software. From LLMs to
