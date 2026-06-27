@@ -13,6 +13,7 @@
     "start": "astro dev",
     "build": "astro build && bun run pagefind",
     "build:cloudflare": "CI_SKIP_AUTO_OG_IMAGE=true astro build && bun run pagefind",
+    "deploy:cloudflare": "bun run build:cloudflare && bunx wrangler pages deploy dist --project-name=logctl",
     "preview": "astro preview",
     "serve": "bun run build && bun preview",
     "astro": "astro",
