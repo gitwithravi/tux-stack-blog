@@ -159,9 +159,6 @@ const navItems = NAV.map((item) => ({
       });
     });
     mask.addEventListener('click', close);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') close();
-    });
     // Close when clicking a sidebar link on mobile
     sidebar.querySelectorAll('a').forEach((a) =>
       a.addEventListener('click', () => {
@@ -169,9 +166,23 @@ const navItems = NAV.map((item) => ({
       }),
     );
   }
-  // `astro:page-load` fires on the initial load too (when ClientRouter is
-  // present), so we only bind here. Calling setupSidebar() additionally at
-  // module top-level would double-bind handlers and make the toggle a no-op
-  // on the first page (open + close fire on the same click).
-  document.addEventListener('astro:page-load', setupSidebar);
+  // The script tag is re-executed after each view-transition swap,
+  // so DOM-bound handlers are always on fresh elements.
+  setupSidebar();
+
+  // Document-level Escape handler persists across swaps — only bind once.
+  if (!(window as unknown as Record<string, unknown>).__sidebarEscapeBound) {
+    (window as unknown as Record<string, unknown>).__sidebarEscapeBound = true;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const sidebar = document.getElementById('sidebar');
+        const mask = document.querySelector<HTMLElement>('[data-sidebar-mask]');
+        if (sidebar && mask && sidebar.classList.contains('is-open')) {
+          sidebar.classList.remove('is-open');
+          mask.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+  }
 </script>
