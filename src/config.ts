@@ -50,7 +50,7 @@ export const SITE: SiteConfig = {
   // ==========================================
 
   /** Default site title used as homepage <title> and meta. */
-  title: 'logctl_',
+  title: 'LogCTL',
   /** Site tagline / description. */
   description: 'A control interface for engineering thoughts.',
   /** Author/handle shown in footer + meta. */
