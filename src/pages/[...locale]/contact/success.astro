@@ -1,0 +1,30 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import { SITE } from '~/config';
+import { localizedPath, useTranslations } from '~/i18n/utils';
+
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageLayout
+  title={t('contact.successTitle')}
+  description={t('contact.successDescription')}
+  locale={locale}
+  crumbs={[
+    { label: t('contact.title'), href: localizedPath('/contact', locale) },
+    { label: t('contact.successTitle') },
+  ]}
+>
+  <p>{t('contact.successDescription')}</p>
+  <p>
+    <a href={localizedPath('/', locale)} class="btn btn-primary">{t('contact.successCta')}</a>
+  </p>
+</PageLayout>

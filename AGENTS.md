@@ -529,6 +529,19 @@ Follow the full checklist in the [Changing the default locale](#changing-the-def
 3. Create the route file at `src/pages/projects.astro` (default locale).
 4. Create `src/pages/<locale>/projects.astro` for each non-default locale.
 
+### Update the Netlify contact form
+The built-in contact page lives at `src/pages/[...locale]/contact.astro`
+and posts to Netlify Forms with `name="contact"`, `data-netlify="true"`,
+a hidden `form-name` input, and a honeypot field. The success redirect
+lands on `src/pages/[...locale]/contact/success.astro`.
+
+Keep form field `name` attributes stable unless you intentionally want
+to change the columns Netlify records for new submissions. Current
+submission fields are `request_type`, `name`, `email`, `organization`,
+`project_stage`, `budget_range`, `timeline`, and `message`. Real
+submissions only work after deployment to Netlify; local dev can only
+render and inspect the generated form markup.
+
 ### Add a social icon
 - If the network can be represented by a `PUBLIC_*` env var, add it to `.env` and
   update the `SOCIALS` derivation logic in `src/config.ts`.

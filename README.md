@@ -216,7 +216,9 @@ order shown in the sidebar.
 
 The `NAV` array controls the top-level navigation links — add or
 remove entries as needed. Each entry's `key` must match an i18n
-string in `src/i18n/ui.ts` (`nav.home`, `nav.about`, etc.).
+string in `src/i18n/ui.ts` (`nav.home`, `nav.about`, etc.). The
+default navigation includes a Contact link that points to the built-in
+Netlify form at `/contact`.
 
 ### 5. Replace the demo content
 
@@ -831,6 +833,21 @@ The build output (`dist/`) is fully static and works on:
 
 Set `SITE_URL` in your hosting provider's environment so canonical
 URLs and `hreflang` match the deployed URL.
+
+### Netlify contact form
+
+The `/contact` page uses Netlify Forms. The form is plain static HTML
+with `data-netlify="true"`, `name="contact"`, a hidden `form-name`
+field, and a honeypot field. Netlify detects it during deploy and
+stores submissions under **Forms → contact** in the Netlify dashboard.
+The form supports both general messages and consulting requests through
+the `request_type` field, with optional consulting context fields for
+organization, project stage, budget range, and timeline.
+
+No API key or server function is required. To receive emails, open the
+site in Netlify and configure form notifications for the `contact`
+form. Local `bun run dev` can render the page, but real submissions
+only work after deploying to Netlify.
 
 ### GitHub Pages deployment
 

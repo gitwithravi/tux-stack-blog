@@ -1,0 +1,181 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import { SITE } from '~/config';
+import { localizedPath, useTranslations } from '~/i18n/utils';
+
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const successPath = localizedPath('/contact/success', locale);
+---
+
+<PageLayout
+  title={t('contact.title')}
+  description={t('contact.description')}
+  locale={locale}
+  crumbs={[{ label: t('contact.title') }]}
+>
+  <p>{t('contact.intro')}</p>
+
+  <form
+    name="contact"
+    method="POST"
+    action={successPath}
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    class="not-prose border-base-300 bg-base-100 grid gap-5 rounded-md border p-5 sm:p-6"
+  >
+    <input type="hidden" name="form-name" value="contact" />
+
+    <p class="hidden">
+      <label>
+        Do not fill this out if you are human:
+        <input name="bot-field" />
+      </label>
+    </p>
+
+    <fieldset class="grid gap-3">
+      <legend class="text-sm font-semibold">{t('contact.requestType')}</legend>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="border-base-300 flex items-start gap-3 rounded-md border p-4">
+          <input
+            class="radio radio-primary mt-1"
+            type="radio"
+            name="request_type"
+            value="general"
+            checked
+            required
+          />
+          <span>
+            <span class="block font-semibold">{t('contact.generalRequest')}</span>
+            <span class="text-base-content/70 text-sm">{t('contact.generalRequestHint')}</span>
+          </span>
+        </label>
+        <label class="border-base-300 flex items-start gap-3 rounded-md border p-4">
+          <input
+            class="radio radio-primary mt-1"
+            type="radio"
+            name="request_type"
+            value="consulting"
+            required
+          />
+          <span>
+            <span class="block font-semibold">{t('contact.consultingRequest')}</span>
+            <span class="text-base-content/70 text-sm">{t('contact.consultingRequestHint')}</span>
+          </span>
+        </label>
+      </div>
+    </fieldset>
+
+    <label class="grid gap-2">
+      <span class="text-sm font-semibold">{t('contact.name')}</span>
+      <input
+        class="input input-bordered w-full"
+        type="text"
+        name="name"
+        autocomplete="name"
+        required
+      />
+    </label>
+
+    <label class="grid gap-2">
+      <span class="text-sm font-semibold">{t('contact.email')}</span>
+      <input
+        class="input input-bordered w-full"
+        type="email"
+        name="email"
+        autocomplete="email"
+        required
+      />
+    </label>
+
+    <div data-consulting-fields class="grid gap-5" hidden>
+      <label class="grid gap-2">
+        <span class="text-sm font-semibold">{t('contact.organization')}</span>
+        <input
+          class="input input-bordered w-full"
+          type="text"
+          name="organization"
+          placeholder={t('contact.organizationHint')}
+          autocomplete="organization"
+        />
+      </label>
+
+      <div class="grid gap-5 md:grid-cols-3">
+        <label class="grid gap-2">
+          <span class="text-sm font-semibold">{t('contact.projectStage')}</span>
+          <select class="select select-bordered w-full" name="project_stage">
+            <option value="">{t('contact.projectStagePlaceholder')}</option>
+            <option value="idea">{t('contact.projectStageIdea')}</option>
+            <option value="active-build">{t('contact.projectStageActive')}</option>
+            <option value="production">{t('contact.projectStageProduction')}</option>
+            <option value="debugging-rescue">{t('contact.projectStageRescue')}</option>
+          </select>
+        </label>
+
+        <label class="grid gap-2">
+          <span class="text-sm font-semibold">{t('contact.budget')}</span>
+          <select class="select select-bordered w-full" name="budget_range">
+            <option value="">{t('contact.budgetPlaceholder')}</option>
+            <option value="unsure">{t('contact.budgetUnsure')}</option>
+            <option value="under-1000">{t('contact.budgetSmall')}</option>
+            <option value="1000-5000">{t('contact.budgetMedium')}</option>
+            <option value="5000-plus">{t('contact.budgetLarge')}</option>
+          </select>
+        </label>
+
+        <label class="grid gap-2">
+          <span class="text-sm font-semibold">{t('contact.timeline')}</span>
+          <select class="select select-bordered w-full" name="timeline">
+            <option value="">{t('contact.timelinePlaceholder')}</option>
+            <option value="flexible">{t('contact.timelineFlexible')}</option>
+            <option value="this-month">{t('contact.timelineSoon')}</option>
+            <option value="urgent">{t('contact.timelineUrgent')}</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <label class="grid gap-2">
+      <span class="text-sm font-semibold">{t('contact.message')}</span>
+      <span class="text-base-content/70 text-sm">{t('contact.messageHint')}</span>
+      <textarea class="textarea textarea-bordered min-h-40 w-full" name="message" required
+      ></textarea>
+    </label>
+
+    <div>
+      <button type="submit" class="btn btn-primary">{t('contact.submit')}</button>
+    </div>
+  </form>
+</PageLayout>
+
+<script>
+  function setupContactRequestType() {
+    document.querySelectorAll<HTMLFormElement>('form[name="contact"]').forEach((form) => {
+      const consultingFields = form.querySelector<HTMLElement>('[data-consulting-fields]');
+      if (!consultingFields) return;
+
+      function syncRequestType() {
+        const checked = form.querySelector<HTMLInputElement>('input[name="request_type"]:checked');
+        consultingFields.hidden = checked?.value !== 'consulting';
+      }
+
+      form.querySelectorAll<HTMLInputElement>('input[name="request_type"]').forEach((input) => {
+        if (input.dataset.requestTypeBound === 'true') return;
+        input.dataset.requestTypeBound = 'true';
+        input.addEventListener('change', syncRequestType);
+      });
+
+      syncRequestType();
+    });
+  }
+
+  setupContactRequestType();
+  document.addEventListener('astro:page-load', setupContactRequestType);
+</script>
