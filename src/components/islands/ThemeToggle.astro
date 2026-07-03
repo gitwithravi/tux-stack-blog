@@ -91,21 +91,25 @@ const t = useTranslations(locale);
     });
   }
 
-  // Bind click handlers to the current DOM elements. The script tag is
-  // re-executed on every view-transition swap, so handlers are always
-  // bound to fresh elements without accumulating over time.
-  updateIcons(currentTheme());
-  document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((btn) => {
-    btn.addEventListener('click', (event) => {
-      const next: Theme = currentTheme() === 'chirpy-dark' ? 'chirpy-light' : 'chirpy-dark';
-      const rect = btn.getBoundingClientRect();
-      const origin = {
-        x: (event as MouseEvent).clientX || rect.left + rect.width / 2,
-        y: (event as MouseEvent).clientY || rect.top + rect.height / 2,
-      };
-      applyTheme(next, origin);
+  function setupThemeToggle(): void {
+    updateIcons(currentTheme());
+    document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((btn) => {
+      if (btn.dataset.themeToggleBound === 'true') return;
+      btn.dataset.themeToggleBound = 'true';
+      btn.addEventListener('click', (event) => {
+        const next: Theme = currentTheme() === 'chirpy-dark' ? 'chirpy-light' : 'chirpy-dark';
+        const rect = btn.getBoundingClientRect();
+        const origin = {
+          x: (event as MouseEvent).clientX || rect.left + rect.width / 2,
+          y: (event as MouseEvent).clientY || rect.top + rect.height / 2,
+        };
+        applyTheme(next, origin);
+      });
     });
-  });
+  }
+
+  setupThemeToggle();
+  document.addEventListener('astro:page-load', setupThemeToggle);
   // Sync with system preference if user hasn't pinned a theme yet.
   // Guard against adding duplicates when the script re-executes.
   if (!(window as unknown as Record<string, unknown>).__themeToggleSystemListen) {
