@@ -3,6 +3,7 @@ title: 'Human-in-the-Loop Is a Lie We Tell Ourselves Before Clicking "Approve Al
 description: "Human-in-the-loop governance sounds responsible, but tired humans blindly approving every prompt isn't governance. The real future is programmatic boundaries for machines and accountability for humans."
 pubDate: 2026-06-30
 heroImage: '../../../assets/images/posts/human-in-the-loop.png'
+heroImageAlt: 'Illustration of human approval sitting inside an automated AI governance loop.'
 categories: ['AI']
 tags: ['human-in-the-loop', 'ai-agents', 'ai-governance', 'agentic-ai', 'automation', 'coding']
 pinned: false

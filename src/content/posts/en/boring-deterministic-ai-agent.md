@@ -4,6 +4,7 @@ description: 'After evaluating multiple AI agent frameworks, I found that determ
 pubDate: 2026-06-20
 updatedDate: 2026-06-21
 heroImage: '../../../assets/images/posts/deterministic-ai.png'
+heroImageAlt: 'Illustration of a deterministic AI automation workflow with predictable steps and controlled decisions.'
 categories: ['AI']
 tags: ['ai-agents', 'automation', 'deterministic-systems', 'llm', 'marvin']
 pinned: false

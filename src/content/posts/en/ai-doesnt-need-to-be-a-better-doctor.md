@@ -5,6 +5,7 @@ pubDate: 2026-07-01
 categories: ['AI']
 tags: ['ai', 'healthcare', 'medicine', 'llm']
 heroImage: '../../../assets/images/posts/ai-medical-historian.png'
+heroImageAlt: 'Illustration of an AI medical historian organizing patient history before a doctor visit.'
 pinned: false
 ---
 

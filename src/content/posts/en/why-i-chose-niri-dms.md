@@ -3,6 +3,7 @@ title: 'Why I Chose Niri + DMS—and Why I’m Staying for a While'
 description: 'After years of traditional desktops and tiling window managers, I found a workflow in Niri’s scrollable tiling and DankMaterialShell that finally fits how I think about projects and contexts.'
 pubDate: 2026-06-22
 heroImage: '../../../assets/images/posts/why-i-chose-niri.png'
+heroImageAlt: 'Illustration of a Linux desktop workflow using Niri scrollable tiling and DankMaterialShell.'
 categories: ['Linux']
 tags: ['niri', 'dms', 'wayland', 'tiling-window-manager', 'linux-desktop', 'hyprland']
 pinned: false

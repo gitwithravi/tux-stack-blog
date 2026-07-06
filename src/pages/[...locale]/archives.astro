@@ -15,10 +15,12 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const posts = await getPosts(locale);
 const groups = groupByYearMonth(posts, locale);
+const description = `Browse ${SITE.title} posts by publication date, grouped chronologically for quick access to older articles.`;
 ---
 
 <BaseLayout
   title={t('archives.title')}
+  description={description}
   pathWithoutLocale="/archives/"
   crumbs={[{ label: t('archives.title') }]}
 >

@@ -3,6 +3,7 @@ title: 'Learning in an AI-Driven World is a Paradox'
 description: 'AI has fundamentally changed the feedback loop between learning and building. I build faster than ever, yet some days I feel like I know less than ever. Here is what that paradox actually means for developers.'
 pubDate: 2026-06-24
 heroImage: '../../../assets/images/posts/learning-in-ai-world.png'
+heroImageAlt: 'Illustration of a developer learning and building faster with AI while facing uncertainty.'
 categories: ['AI']
 tags: ['ai', 'learning', 'developer-tools', 'productivity', 'software-engineering', 'career', 'llm']
 pinned: false

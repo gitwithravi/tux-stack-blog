@@ -5,6 +5,7 @@ pubDate: 2026-07-03
 categories: ['AI']
 tags: ['data-centers', 'infrastructure', 'antarctica', 'cloud', 'networking']
 heroImage: '../../../assets/images/posts/why-no-data-centers-in-antarctica.png'
+heroImageAlt: 'Illustration of the infrastructure challenges of operating data centers in Antarctica.'
 pinned: false
 ---
 

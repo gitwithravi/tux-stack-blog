@@ -5,6 +5,7 @@ pubDate: 2026-07-03
 categories: ['AI']
 tags: ['data-centers', 'infrastructure', 'space', 'cloud', 'networking']
 heroImage: '../../../assets/images/posts/why-no-data-centres-in-space.png'
+heroImageAlt: 'Illustration of the networking, cooling, maintenance, and repair challenges of data centers in space.'
 pinned: false
 ---
 

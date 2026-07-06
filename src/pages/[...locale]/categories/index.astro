@@ -15,10 +15,12 @@ export function getStaticPaths() {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const categories = await getCategoriesWithCount(locale);
+const description = `Browse ${SITE.title} posts by category across engineering practice, AI systems, infrastructure, and tooling.`;
 ---
 
 <BaseLayout
   title={t('categories.title')}
+  description={description}
   pathWithoutLocale="/categories/"
   crumbs={[{ label: t('categories.title') }]}
 >

@@ -5,6 +5,7 @@ pubDate: 2026-07-01
 categories: ['AI']
 tags: ['git', 'worktrees', 'devops', 'productivity']
 heroImage: '../../../assets/images/posts/git-worktrees.png'
+heroImageAlt: 'Illustration of Git worktrees branching from one repository into multiple working directories.'
 pinned: false
 ---
 

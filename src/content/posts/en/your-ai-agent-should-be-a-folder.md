@@ -3,6 +3,7 @@ title: 'Your AI Agent Should Be a Folder'
 description: 'After testing agent frameworks for personal automation, I realized the best personal AI agent is not a platform—it is a well-organized directory of Markdown, scripts, logs, and state.'
 pubDate: 2026-07-05
 heroImage: '../../../assets/images/posts/ai-agent-folder.png'
+heroImageAlt: 'Illustration of a personal AI agent represented as organized folders, Markdown files, scripts, logs, and state.'
 categories: ['AI']
 tags: ['ai-agents', 'unix-philosophy', 'filesystem', 'personal-agent', 'llm', 'automation']
 pinned: false

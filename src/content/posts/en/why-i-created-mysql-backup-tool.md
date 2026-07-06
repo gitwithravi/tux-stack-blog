@@ -5,6 +5,7 @@ pubDate: 2026-07-01
 categories: ['AI']
 tags: ['mysql', 'backup', 'devops', 'shell', 'infrastructure']
 heroImage: '../../../assets/images/posts/mysql-backup-tool.png'
+heroImageAlt: 'Illustration of a minimal MySQL backup flow using dumps, compression, cron, and another server.'
 pinned: false
 ---
 

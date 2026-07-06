@@ -160,10 +160,11 @@ const successPath = localizedPath('/contact/success', locale);
     document.querySelectorAll<HTMLFormElement>('form[name="contact"]').forEach((form) => {
       const consultingFields = form.querySelector<HTMLElement>('[data-consulting-fields]');
       if (!consultingFields) return;
+      const consultingFieldsEl = consultingFields;
 
       function syncRequestType() {
         const checked = form.querySelector<HTMLInputElement>('input[name="request_type"]:checked');
-        consultingFields.hidden = checked?.value !== 'consulting';
+        consultingFieldsEl.hidden = checked?.value !== 'consulting';
       }
 
       form.querySelectorAll<HTMLInputElement>('input[name="request_type"]').forEach((input) => {

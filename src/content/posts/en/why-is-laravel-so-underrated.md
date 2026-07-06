@@ -3,6 +3,7 @@ title: 'Why Is Laravel So Underrated?'
 description: 'Laravel gets dismissed as outdated PHP, but it still ships serious business applications faster than most modern stacks. Here is why it remains my default for backend APIs.'
 pubDate: 2026-06-26
 heroImage: '../../../assets/images/posts/laravel.png'
+heroImageAlt: 'Illustration of Laravel as a practical backend framework for shipping business applications.'
 categories: ['Engineering']
 tags:
   [

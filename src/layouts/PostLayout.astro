@@ -67,6 +67,11 @@ const generatedOgPath = `/og/${ogPrefix}${ogSlug}.png`;
 const skipAutoOg = !SITE.autoOgImage || import.meta.env.CI_SKIP_AUTO_OG_IMAGE === 'true';
 const ogImage = heroSrc ?? (skipAutoOg ? undefined : generatedOgPath);
 
+const crumbs = [
+  { label: t('nav.posts'), href: localizedPath('/', locale) },
+  { label: post.data.title },
+];
+
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
@@ -79,15 +84,12 @@ const seo = buildSeo({
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
   availableLocales,
+  crumbs,
+  canonicalURL: post.data.canonicalURL,
   // An unlisted post hides from SEO by default unless the author
   // explicitly sets `unlistedHideFromSeo: false`.
   noindex: post.data.unlisted && (post.data.unlistedHideFromSeo ?? true),
 });
-
-const crumbs = [
-  { label: t('nav.posts'), href: localizedPath('/', locale) },
-  { label: post.data.title },
-];
 ---
 
 <BaseLayout

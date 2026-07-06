@@ -4,6 +4,7 @@ description: 'Frontier models are brilliant, but many everyday coding tasks run 
 pubDate: 2026-06-20
 updatedDate: 2026-06-21
 heroImage: '../../../assets/images/posts/no-need-for-frotier-llm.png'
+heroImageAlt: 'Illustration comparing smaller coding models with frontier LLMs for everyday software tasks.'
 categories: ['AI']
 tags:
   [

@@ -5,6 +5,7 @@ pubDate: 2026-07-02
 categories: ['AI']
 tags: ['ai', 'automation', 'course-production', 'generative-ai', 'education', 'workflow']
 heroImage: '../../../assets/images/posts/ai-animation-pipeline.png'
+heroImageAlt: 'Illustration of an automated course production pipeline connecting scripts, assets, narration, and slides.'
 pinned: false
 ---
 

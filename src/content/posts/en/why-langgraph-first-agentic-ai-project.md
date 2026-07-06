@@ -5,6 +5,7 @@ pubDate: 2026-06-20
 categories: ['AI']
 tags: ['langgraph', 'agentic-ai', 'ai-agents', 'langchain', 'llm']
 heroImage: '../../../assets/images/posts/why-langgraph.png'
+heroImageAlt: 'Illustration of a LangGraph agent workflow with state, routing, tools, and approval steps.'
 pinned: false
 ---
 

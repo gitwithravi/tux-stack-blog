@@ -15,10 +15,12 @@ export function getStaticPaths() {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const tags = await getTagsWithCount(locale);
+const description = `Explore ${SITE.title} posts by tag, including engineering, AI, infrastructure, Linux, and developer tooling topics.`;
 ---
 
 <BaseLayout
   title={t('tags.title')}
+  description={description}
   pathWithoutLocale="/tags/"
   crumbs={[{ label: t('tags.title') }]}
 >

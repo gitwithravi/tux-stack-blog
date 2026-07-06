@@ -31,10 +31,12 @@ const t = useTranslations(locale);
 const posts = (await getPosts(locale)).filter(
   (p) => p.data.categories && p.data.categories.some((c) => slugify(c) === category),
 );
+const description = `Read ${posts.length} ${posts.length === 1 ? 'post' : 'posts'} in ${categoryName} on ${SITE.title}.`;
 ---
 
 <BaseLayout
   title={categoryName}
+  description={description}
   pathWithoutLocale={`/categories/${category}/`}
   crumbs={[
     { label: t('categories.title'), href: localizedPath('/categories/', locale) },

@@ -4,6 +4,7 @@ description: 'When Jira, ClickUp, and OpenProject overwhelmed a non-technical cr
 pubDate: 2026-06-20
 updatedDate: 2026-06-21
 heroImage: '../../../assets/images/posts/simple-task-tracker.png'
+heroImageAlt: 'Illustration of a simple task tracker built for an animation team workflow.'
 categories: ['Engineering']
 tags: ['task-tracker', 'project-management', 'internal-tools', 'agile', 'team-productivity']
 pinned: false

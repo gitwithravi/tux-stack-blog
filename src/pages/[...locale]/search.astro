@@ -24,10 +24,12 @@ const i18n = {
   resultsCount: t('search.resultsCount'),
   resultsCountOne: t('search.resultsCountOne'),
 };
+const description = `Search ${SITE.title} articles about engineering, AI systems, Linux, infrastructure, and developer tooling.`;
 ---
 
 <BaseLayout
   title={t('search.title')}
+  description={description}
   pathWithoutLocale="/search/"
   narrow={true}
   crumbs={[{ label: t('search.title') }]}

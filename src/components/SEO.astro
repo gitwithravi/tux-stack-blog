@@ -14,10 +14,10 @@ const { meta } = Astro.props;
 // locale's feed as the primary one, and (when multilingual) every other
 // locale's feed too.
 const primaryFeed = {
-  href: localizedPath('/rss.xml', meta.locale),
+  href: new URL(localizedPath('/rss.xml', meta.locale), SITE.url).toString(),
   title: `${SITE.title} — RSS`,
 };
-const sitemapHref = withBase('/sitemap-index.xml');
+const sitemapHref = new URL(withBase('/sitemap-index.xml'), SITE.url).toString();
 ---
 
 <title>{meta.title}</title>
@@ -41,7 +41,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
 <meta property="og:type" content={meta.type} />
 <meta property="og:url" content={meta.canonical} />
 <meta property="og:image" content={meta.ogImage} />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content={meta.ogLocale} />
 
 {/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />
@@ -60,6 +60,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
     <meta property="article:modified_time" content={meta.modifiedTime} />
   )
 }
+{meta.type === 'article' && <meta property="article:author" content={SITE.author.name} />}
 {meta.type === 'article' && meta.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
 {/* hreflang alternates for SEO */}
@@ -67,3 +68,5 @@ const sitemapHref = withBase('/sitemap-index.xml');
   SITE.multilingual &&
     meta.hreflangs.map(({ locale, href }) => <link rel="alternate" hreflang={locale} href={href} />)
 }
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(meta.jsonLd)} />

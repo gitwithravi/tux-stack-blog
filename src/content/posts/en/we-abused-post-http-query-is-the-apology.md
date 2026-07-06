@@ -5,6 +5,7 @@ pubDate: 2026-07-03
 categories: ['AI']
 tags: ['http', 'api-design', 'networking', 'rfc', 'web']
 heroImage: '../../../assets/images/posts/http-query-param.png'
+heroImageAlt: 'Illustration of HTTP QUERY separating complex read-only requests from overloaded POST endpoints.'
 pinned: false
 ---
 

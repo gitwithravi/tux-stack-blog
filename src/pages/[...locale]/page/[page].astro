@@ -38,10 +38,12 @@ const start = (current - 1) * pageSize;
 const pagePosts = allPosts.slice(start, start + pageSize);
 
 const hrefForPage = (n: number) => localizedPath(n === 1 ? '/' : `/page/${n}/`, locale);
+const description = `Page ${current} of ${SITE.title} articles, covering engineering thoughts, AI systems, infrastructure, Linux, and developer tooling.`;
 ---
 
 <BaseLayout
   title={`${t('list.allPosts')} — ${t('pagination.page')} ${current}`}
+  description={description}
   pathWithoutLocale={`/page/${current}/`}
 >
   <header class="mb-6">
