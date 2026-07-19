@@ -77,7 +77,7 @@ function listPostFiles(dir) {
  * @returns {string | undefined}
  */
 function frontmatterValue(frontmatter, key) {
-  const match = frontmatter.match(new RegExp(`^${key}:\s*(.+?)\s*$`, 'm'));
+  const match = frontmatter.match(new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm'));
   return match ? match[1].replace(/^['"]|['"]$/g, '') : undefined;
 }
 
@@ -93,9 +93,11 @@ function frontmatterValue(frontmatter, key) {
 function frontmatterArray(frontmatter, key) {
   const stripQuotes = (/** @type {string} */ s) => s.trim().replace(/^['"]|['"]$/g, '');
   // [\s\S] (not `.`) so multi-line inline arrays are matched too.
-  const inline = frontmatter.match(new RegExp(`^${key}:\s*\[([\s\S]*?)\]`, 'm'));
+  const inline = frontmatter.match(new RegExp(`^${key}:\\s*\\[([\\s\\S]*?)\\]`, 'm'));
   if (inline) return inline[1].split(',').map(stripQuotes).filter(Boolean);
-  const block = frontmatter.match(new RegExp(`^${key}:\s*\n((?:[ \t]+-\s+.*(?:\n|$))+)`, 'm'));
+  const block = frontmatter.match(
+    new RegExp(`^${key}:\\s*\\n((?:[ \\t]+-\\s+.*(?:\\n|$))+)`, 'm'),
+  );
   if (block) {
     return block[1]
       .split('\n')
