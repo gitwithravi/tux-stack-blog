@@ -21,9 +21,23 @@ const currentPage = 1;
 const pagePosts = posts.slice(0, pageSize);
 
 const hrefForPage = (n: number) => localizedPath(n === 1 ? '/' : `/page/${n}/`, locale);
+
+// The homepage <title> is the site's most valuable SEO real estate:
+// lead with the brand, then the core topics — no " — Site" suffix.
+const homeTitle = `${SITE.title} — AI Systems, Engineering & Linux Deep-Dives`;
 ---
 
-<BaseLayout title={SITE.title} description={SITE.description} pathWithoutLocale="/">
+<BaseLayout
+  title={homeTitle}
+  absoluteTitle={true}
+  description={SITE.description}
+  pathWithoutLocale="/"
+>
+  {
+    /* Visually-hidden H1: the homepage otherwise has no heading, and the
+      sidebar site name is a <span>. Gives crawlers/AT a proper heading. */
+  }
+  <h1 class="sr-only">{homeTitle}</h1>
   <PostList posts={pagePosts} locale={locale} />
   <Pagination
     currentPage={currentPage}

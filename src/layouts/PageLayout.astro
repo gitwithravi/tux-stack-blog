@@ -10,16 +10,23 @@ interface Props {
   crumbs?: Array<{ label: string; href?: string }>;
   /** Load KaTeX CSS for this page only (no global load). */
   math?: boolean;
+  /** Emit <meta name="robots" content="noindex, nofollow">. */
+  noindex?: boolean;
 }
 
-const { title, description, crumbs, math = false } = Astro.props;
+const { title, description, crumbs, math = false, noindex = false } = Astro.props;
 
 const articleClass = SITE.boxedArticles
   ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
   : 'px-1 py-6 sm:px-2 sm:py-8';
 ---
 
-<BaseLayout title={title} description={description} crumbs={crumbs ?? [{ label: title }]}>
+<BaseLayout
+  title={title}
+  description={description}
+  noindex={noindex}
+  crumbs={crumbs ?? [{ label: title }]}
+>
   {math && <MathStyles />}
   <article class={articleClass}>
     <header class="mb-6">

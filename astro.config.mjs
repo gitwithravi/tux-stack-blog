@@ -1,7 +1,8 @@
 // @ts-check
+/* global URL */
 import { defineConfig, fontProviders, svgoOptimizer } from 'astro/config';
 import process from 'node:process';
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
@@ -28,8 +29,7 @@ const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
 
 /**
  * Set of URL path segments that belong to unlisted posts/pages.
- * Populated by `collectUnlistedUrls()` integration before the sitemap
- * integration runs, so the sitemap `filter` can exclude them.
+ * Consumed by the sitemap `filter` to exclude them.
  *
  * We use path segments (e.g. "posts/my-slug") rather than full URLs so
  * the check works regardless of `SITE_URL` or `BASE_PATH` values.
@@ -37,42 +37,87 @@ const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
 const unlistedPathSegments = new Set();
 
 /**
- * Integration that reads the content collection at build time and
- * populates `unlistedPathSegments` with the URL path segments of every
- * unlisted post. Must be listed BEFORE `@astrojs/sitemap` in the
- * integrations array.
+ * Map of URL path segment (e.g. "posts/my-slug") → ISO 8601 date for
+ * every post, sourced from `updatedDate ?? pubDate`. Consumed by the
+ * sitemap `serialize()` hook to emit `<lastmod>` entries.
  */
-function collectUnlistedUrls() {
-  return {
-    name: 'chirpy:collect-unlisted-urls',
-    hooks: {
-      'astro:build:start': async () => {
-        try {
-          // Dynamically import so this only runs during builds (not in
-          // the config evaluation phase where astro:content isn't ready).
-          const { getCollection } = await import('astro:content');
-          const entries = await getCollection('posts');
-          for (const entry of entries) {
-            if (!entry.data.unlisted) continue;
-            // Derive locale and slug from the entry id (e.g. "en/my-post.md").
-            const segs = entry.id.split(/[\\/]/);
-            const locale = segs[0] && /** @type {readonly string[]} */ (SITE.locales).includes(segs[0]) ? segs[0] : SITE.defaultLocale;
-            const slug = segs.slice(1).join('/').replace(/\.(md|mdx)$/i, '');
-            if (locale === SITE.defaultLocale) {
-              unlistedPathSegments.add(`posts/${slug}`);
-            } else {
-              unlistedPathSegments.add(`${locale}/posts/${slug}`);
-            }
-          }
-        } catch {
-          // Content collections aren't available in all build contexts
-          // (e.g. CI fast mode). Silently skip — the sitemap will include
-          // unlisted posts in that case, which is acceptable for CI.
-        }
-      },
-    },
-  };
+const lastmodByPathSegment = new Map();
+
+/**
+ * Recursively list every .md/.mdx file under `dir`.
+ * @param {string} dir
+ * @returns {string[]}
+ */
+function listPostFiles(dir) {
+  /** @type {string[]} */
+  const out = [];
+  for (const name of readdirSync(dir)) {
+    const path = join(dir, name);
+    if (statSync(path).isDirectory()) out.push(...listPostFiles(path));
+    else if (/\.(md|mdx)$/i.test(name)) out.push(path);
+  }
+  return out;
 }
+
+/**
+ * Read a scalar frontmatter value (e.g. `pubDate: 2026-07-01`).
+ * @param {string} frontmatter
+ * @param {string} key
+ * @returns {string | undefined}
+ */
+function frontmatterValue(frontmatter, key) {
+  const match = frontmatter.match(new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm'));
+  return match ? match[1].replace(/^['"]|['"]$/g, '') : undefined;
+}
+
+/**
+ * Populate `unlistedPathSegments` + `lastmodByPathSegment` by scanning
+ * `src/content/posts/` directly from the filesystem.
+ *
+ * Why not `getCollection()` in an `astro:build:start` hook? Importing
+ * `astro:content` from the config fails in some runtimes ("Vite module
+ * runner has been closed"), which silently disabled the unlisted-post
+ * sitemap exclusion. Reading frontmatter at config-evaluation time is
+ * runtime-independent and works in dev, build, and CI alike.
+ */
+function collectPostMetadata() {
+  const postsDir = fileURLToPath(new URL('./src/content/posts', import.meta.url));
+  /** @type {string[]} */
+  let files;
+  try {
+    files = listPostFiles(postsDir);
+  } catch {
+    return; // No content directory — nothing to collect.
+  }
+  for (const file of files) {
+    const relative = file.slice(postsDir.length + 1);
+    const segs = relative.split(/[\\/]/);
+    const locale =
+      segs[0] && /** @type {readonly string[]} */ (SITE.locales).includes(segs[0])
+        ? segs[0]
+        : SITE.defaultLocale;
+    const slug = segs
+      .slice(locale === segs[0] ? 1 : 0)
+      .join('/')
+      .replace(/\.(md|mdx)$/i, '');
+    const segment = locale === SITE.defaultLocale ? `posts/${slug}` : `${locale}/posts/${slug}`;
+
+    const text = readFileSync(file, 'utf8');
+    const fmMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fmMatch) continue;
+    const frontmatter = fmMatch[1];
+
+    const lastmodRaw =
+      frontmatterValue(frontmatter, 'updatedDate') ?? frontmatterValue(frontmatter, 'pubDate');
+    if (lastmodRaw) {
+      const lastmod = new Date(lastmodRaw);
+      if (!Number.isNaN(lastmod.valueOf()))
+        lastmodByPathSegment.set(segment, lastmod.toISOString());
+    }
+    if (/^unlisted:\s*true\s*$/m.test(frontmatter)) unlistedPathSegments.add(segment);
+  }
+}
+collectPostMetadata();
 
 /**
  * Tiny inline integration: after `@astrojs/sitemap` runs, rewrite the
@@ -246,7 +291,6 @@ export default defineConfig({
     ...(SKIP_RSS_SITEMAP
       ? []
       : [
-          collectUnlistedUrls(),
           sitemap({
             i18n: {
               defaultLocale: SITE.defaultLocale,
@@ -261,11 +305,31 @@ export default defineConfig({
             xslURL: SITEMAP_XSL_HREF,
             filter: (page) => {
               if (page.includes('/draft/') || page.endsWith('/404/')) return false;
+              // Internal search + form thank-you pages are noindexed —
+              // keep them out of the sitemap too.
+              if (page.endsWith('/search/') || page.endsWith('/contact/success/')) return false;
               // Exclude unlisted posts from the sitemap.
               for (const seg of unlistedPathSegments) {
                 if (page.includes(String(seg))) return false;
               }
               return true;
+            },
+            // Attach <lastmod> (from updatedDate ?? pubDate) to post URLs so
+            // crawlers get a real content-freshness signal.
+            serialize: (item) => {
+              try {
+                const { pathname } = new URL(item.url);
+                const withoutBase =
+                  BASE !== '/' && pathname.startsWith(BASE)
+                    ? pathname.slice(BASE.length)
+                    : pathname;
+                const rel = withoutBase.replace(/^\/+|\/+$/g, '');
+                const lastmod = lastmodByPathSegment.get(rel);
+                if (lastmod) item.lastmod = lastmod;
+              } catch {
+                // Ignore malformed URLs — leave the entry untouched.
+              }
+              return item;
             },
           }),
           rewriteSitemapXslToRelative(),

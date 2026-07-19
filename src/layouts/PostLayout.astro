@@ -66,6 +66,13 @@ const ogPrefix = locale === SITE.defaultLocale ? '' : `${locale}/`;
 const generatedOgPath = `/og/${ogPrefix}${ogSlug}.png`;
 const skipAutoOg = !SITE.autoOgImage || import.meta.env.CI_SKIP_AUTO_OG_IMAGE === 'true';
 const ogImage = heroSrc ?? (skipAutoOg ? undefined : generatedOgPath);
+// og:image:width/height — generated OG images are always 1200×630; hero
+// assets imported via the image() schema expose intrinsic dimensions;
+// plain public/remote hero paths have unknown size (tags omitted).
+const usingGeneratedOg = !heroSrc && !skipAutoOg;
+const heroDims = heroAsset && typeof heroAsset !== 'string' ? heroAsset : undefined;
+const ogImageWidth = heroDims?.width ?? (usingGeneratedOg ? 1200 : undefined);
+const ogImageHeight = heroDims?.height ?? (usingGeneratedOg ? 630 : undefined);
 
 const crumbs = [
   { label: t('nav.posts'), href: localizedPath('/', locale) },
@@ -79,6 +86,9 @@ const seo = buildSeo({
   fullPath: Astro.url.pathname,
   locale,
   ogImage,
+  ogImageWidth,
+  ogImageHeight,
+  ogImageAlt: heroAlt || post.data.title,
   type: 'article',
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
