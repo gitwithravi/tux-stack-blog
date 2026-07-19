@@ -21,6 +21,7 @@ import { remarkAlert } from './src/plugins/remark-alert.ts';
 import { unified } from '@astrojs/markdown-remark';
 
 import { SITE } from './src/config';
+import { slugify } from './src/utils/slugify.ts';
 
 const rawBase = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
 const BASE = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
@@ -42,6 +43,16 @@ const unlistedPathSegments = new Set();
  * sitemap `serialize()` hook to emit `<lastmod>` entries.
  */
 const lastmodByPathSegment = new Map();
+
+/**
+ * Set of URL path segments (e.g. "/tags/agile/") for tag pages with too
+ * few posts to be worth indexing — thin content. Consumed by the
+ * sitemap `filter`; the pages themselves carry `noindex`.
+ */
+const thinTagPathSegments = new Set();
+
+/** Minimum number of posts for a tag page to be indexable. */
+const MIN_POSTS_PER_INDEXABLE_TAG = 3;
 
 /**
  * Recursively list every .md/.mdx file under `dir`.
@@ -66,13 +77,38 @@ function listPostFiles(dir) {
  * @returns {string | undefined}
  */
 function frontmatterValue(frontmatter, key) {
-  const match = frontmatter.match(new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm'));
+  const match = frontmatter.match(new RegExp(`^${key}:\s*(.+?)\s*$`, 'm'));
   return match ? match[1].replace(/^['"]|['"]$/g, '') : undefined;
 }
 
 /**
- * Populate `unlistedPathSegments` + `lastmodByPathSegment` by scanning
- * `src/content/posts/` directly from the filesystem.
+ * Read a frontmatter string array — supports the single-line inline
+ * form (`tags: ['a', 'b']`), the multi-line inline form
+ * (`tags:\n  [\n    'a',\n  ]`), and the block-list form
+ * (`tags:\n  - a\n  - b`).
+ * @param {string} frontmatter
+ * @param {string} key
+ * @returns {string[]}
+ */
+function frontmatterArray(frontmatter, key) {
+  const stripQuotes = (/** @type {string} */ s) => s.trim().replace(/^['"]|['"]$/g, '');
+  // [\s\S] (not `.`) so multi-line inline arrays are matched too.
+  const inline = frontmatter.match(new RegExp(`^${key}:\s*\[([\s\S]*?)\]`, 'm'));
+  if (inline) return inline[1].split(',').map(stripQuotes).filter(Boolean);
+  const block = frontmatter.match(new RegExp(`^${key}:\s*\n((?:[ \t]+-\s+.*(?:\n|$))+)`, 'm'));
+  if (block) {
+    return block[1]
+      .split('\n')
+      .map((line) => stripQuotes(line.replace(/^[ \t]+-\s+/, '')))
+      .filter(Boolean);
+  }
+  return [];
+}
+
+/**
+ * Populate `unlistedPathSegments`, `lastmodByPathSegment` and
+ * `thinTagPathSegments` by scanning `src/content/posts/` directly from
+ * the filesystem.
  *
  * Why not `getCollection()` in an `astro:build:start` hook? Importing
  * `astro:content` from the config fails in some runtimes ("Vite module
@@ -81,6 +117,8 @@ function frontmatterValue(frontmatter, key) {
  * runtime-independent and works in dev, build, and CI alike.
  */
 function collectPostMetadata() {
+  /** @type {Map<string, number>} tag counts per locale ("{locale}::{tag}") */
+  const tagCounts = new Map();
   const postsDir = fileURLToPath(new URL('./src/content/posts', import.meta.url));
   /** @type {string[]} */
   let files;
@@ -114,7 +152,27 @@ function collectPostMetadata() {
       if (!Number.isNaN(lastmod.valueOf()))
         lastmodByPathSegment.set(segment, lastmod.toISOString());
     }
-    if (/^unlisted:\s*true\s*$/m.test(frontmatter)) unlistedPathSegments.add(segment);
+    const unlisted = /^unlisted:\s*true\s*$/m.test(frontmatter);
+    const draft = /^draft:\s*true\s*$/m.test(frontmatter);
+    if (unlisted) unlistedPathSegments.add(segment);
+    // Tag counts drive the thin-tag sitemap exclusion. Mirror
+    // `getTagsWithCount()`, which only counts listed, non-draft posts.
+    if (!unlisted && !draft) {
+      for (const tag of frontmatterArray(frontmatter, 'tags')) {
+        const key = `${locale}::${tag}`;
+        tagCounts.set(key, (tagCounts.get(key) ?? 0) + 1);
+      }
+    }
+  }
+
+  // Tag pages below the indexability threshold are thin content —
+  // exclude them from the sitemap (they also carry `noindex`).
+  for (const [key, count] of tagCounts) {
+    if (count >= MIN_POSTS_PER_INDEXABLE_TAG) continue;
+    const [locale, tag] = key.split('::');
+    thinTagPathSegments.add(
+      locale === SITE.defaultLocale ? `/tags/${slugify(tag)}/` : `/${locale}/tags/${slugify(tag)}/`,
+    );
   }
 }
 collectPostMetadata();
@@ -311,6 +369,10 @@ export default defineConfig({
               // Exclude unlisted posts from the sitemap.
               for (const seg of unlistedPathSegments) {
                 if (page.includes(String(seg))) return false;
+              }
+              // Exclude thin tag pages (noindexed — keep signals aligned).
+              for (const seg of thinTagPathSegments) {
+                if (page.endsWith(String(seg))) return false;
               }
               return true;
             },

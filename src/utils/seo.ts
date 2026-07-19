@@ -1,5 +1,5 @@
 /* global URL */
-import { SITE, type Locale } from '../config';
+import { SITE, SOCIALS, type Locale } from '../config';
 import { alternates, htmlLang, localizedPath, withBase } from '../i18n/utils';
 
 type JsonLdValue =
@@ -56,6 +56,10 @@ interface BuildSeoArgs {
   publishedTime?: Date;
   modifiedTime?: Date;
   tags?: string[];
+  /** Post categories — emitted as `articleSection` in BlogPosting JSON-LD. */
+  categories?: string[];
+  /** Emitted as `wordCount` in BlogPosting JSON-LD. */
+  wordCount?: number;
   canonicalURL?: string;
   crumbs?: Array<{ label: string; href?: string }>;
   /**
@@ -118,6 +122,9 @@ function buildJsonLd(args: BuildSeoArgs, meta: Omit<SeoMeta, 'jsonLd'>): JsonLdV
   const language = htmlLang(args.locale);
   const breadcrumb = buildBreadcrumbs(args.crumbs, args.locale, meta.canonical);
   const authorAvatar = imageSrc(SITE.author.avatar);
+  // External profile URLs — consolidate the author entity across the
+  // knowledge graph (GitHub, LinkedIn, X, … from SOCIALS config).
+  const sameAs = SOCIALS.map((s) => s.href).filter((h) => h.startsWith('http'));
   const graph: JsonLdValue[] = [
     {
       '@type': 'Person',
@@ -126,6 +133,7 @@ function buildJsonLd(args: BuildSeoArgs, meta: Omit<SeoMeta, 'jsonLd'>): JsonLdV
       ...(SITE.author.url ? { url: SITE.author.url } : {}),
       ...(authorAvatar ? { image: absoluteUrl(authorAvatar) } : {}),
       description: SITE.author.bio,
+      ...(sameAs.length ? { sameAs } : {}),
     },
     {
       '@type': 'WebSite',
@@ -160,6 +168,8 @@ function buildJsonLd(args: BuildSeoArgs, meta: Omit<SeoMeta, 'jsonLd'>): JsonLdV
           publisher: { '@id': personId() },
           inLanguage: language,
           keywords: meta.tags?.join(', '),
+          articleSection: args.categories?.length ? args.categories : undefined,
+          wordCount: args.wordCount ?? undefined,
           ...(breadcrumb ? { breadcrumb: { '@id': `${meta.canonical}#breadcrumb` } } : {}),
         }
       : {
