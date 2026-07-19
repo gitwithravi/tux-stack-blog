@@ -1,0 +1,10 @@
+# Netlify redirects — https://docs.netlify.com/routing/redirects/
+# ( honoured by Netlify only; not applied by `bun run dev` / preview )
+#
+# Posts live at /posts/{slug}/ but there is no separate /posts/ index —
+# the homepage IS the post listing. Serve a real 301 for the bare
+# segment instead of a 404 (users and crawlers do trim URLs).
+/posts    /    301
+/posts/   /    301
+# If you enable additional locales in src/config.ts, mirror these:
+# /fr/posts    /fr    301

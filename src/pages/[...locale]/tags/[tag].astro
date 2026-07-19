@@ -30,12 +30,17 @@ const { tag } = Astro.params;
 const t = useTranslations(locale);
 const posts = (await getPosts(locale)).filter((p) => p.data.tags.some((tg) => slugify(tg) === tag));
 const description = `Read ${posts.length} ${posts.length === 1 ? 'post' : 'posts'} tagged ${tagName} on ${SITE.title}.`;
+// Thin-content guard: tag pages with very few posts add no value in the
+// index (near-duplicate listings). Keep the threshold in sync with
+// MIN_POSTS_PER_INDEXABLE_TAG in astro.config.mjs (sitemap exclusion).
+const noindex = posts.length < 3;
 ---
 
 <BaseLayout
   title={`#${tagName}`}
   description={description}
   pathWithoutLocale={`/tags/${tag}/`}
+  noindex={noindex}
   crumbs={[
     { label: t('tags.title'), href: localizedPath('/tags/', locale) },
     { label: `#${tagName}` },
