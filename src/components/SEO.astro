@@ -36,7 +36,17 @@ const ogImageAlt = meta.ogImageAlt ?? meta.title;
 <title>{meta.title}</title>
 <meta name="description" content={meta.description} />
 <link rel="canonical" href={meta.canonical} />
-{meta.noindex && <meta name="robots" content="noindex, nofollow" />}
+{
+  /* max-image-preview:large keeps the 1200px OG images eligible for
+    Google Discover / image surfaces. Exactly one robots meta is emitted. */
+}
+{
+  meta.noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="max-image-preview:large" />
+  )
+}
 
 {/* Feed + sitemap auto-discovery */}
 <link

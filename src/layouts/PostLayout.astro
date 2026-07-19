@@ -7,7 +7,7 @@ import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, SITE, type Locale } from '../config';
-import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
+import { useTranslations, stripLocale, formatDate, isoDate } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
 import {
   type Post,
@@ -36,7 +36,8 @@ interface Props {
 
 const { post, headings, body, prev, next, locale } = Astro.props;
 const t = useTranslations(locale);
-const minutes = readingTime(body).minutes;
+const postReadingTime = readingTime(body);
+const minutes = postReadingTime.minutes;
 
 // Translation siblings (used by language switcher links).
 const translations = await getTranslations(post);
@@ -74,10 +75,11 @@ const heroDims = heroAsset && typeof heroAsset !== 'string' ? heroAsset : undefi
 const ogImageWidth = heroDims?.width ?? (usingGeneratedOg ? 1200 : undefined);
 const ogImageHeight = heroDims?.height ?? (usingGeneratedOg ? 630 : undefined);
 
-const crumbs = [
-  { label: t('nav.posts'), href: localizedPath('/', locale) },
-  { label: post.data.title },
-];
+// Breadcrumb: just the post itself. The JSON-LD builder prepends
+// "SITE.title → /" automatically, and there is no separate /posts/
+// index page to link as an intermediate level (the homepage IS the
+// post listing) — a "Posts → /" crumb would duplicate the target.
+const crumbs = [{ label: post.data.title }];
 
 const seo = buildSeo({
   title: post.data.title,
@@ -93,6 +95,8 @@ const seo = buildSeo({
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
+  categories: post.data.categories,
+  wordCount: postReadingTime.words,
   availableLocales,
   crumbs,
   canonicalURL: post.data.canonicalURL,
