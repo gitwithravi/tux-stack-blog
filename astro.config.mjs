@@ -95,9 +95,7 @@ function frontmatterArray(frontmatter, key) {
   // [\s\S] (not `.`) so multi-line inline arrays are matched too.
   const inline = frontmatter.match(new RegExp(`^${key}:\\s*\\[([\\s\\S]*?)\\]`, 'm'));
   if (inline) return inline[1].split(',').map(stripQuotes).filter(Boolean);
-  const block = frontmatter.match(
-    new RegExp(`^${key}:\\s*\\n((?:[ \\t]+-\\s+.*(?:\\n|$))+)`, 'm'),
-  );
+  const block = frontmatter.match(new RegExp(`^${key}:\\s*\\n((?:[ \\t]+-\\s+.*(?:\\n|$))+)`, 'm'));
   if (block) {
     return block[1]
       .split('\n')
