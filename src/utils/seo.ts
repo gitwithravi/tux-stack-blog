@@ -16,6 +16,11 @@ export interface SeoMeta {
   description: string;
   canonical: string;
   ogImage: string;
+  /** Intrinsic OG image size — emitted as og:image:width/height. */
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  /** Emitted as og:image:alt + twitter:image:alt. */
+  ogImageAlt?: string;
   ogLocale: string;
   type: 'website' | 'article';
   publishedTime?: string;
@@ -35,11 +40,18 @@ export interface SeoMeta {
 
 interface BuildSeoArgs {
   title?: string;
+  /** When `true`, `title` is used verbatim (no `" — ${SITE.title}"` suffix). */
+  absoluteTitle?: boolean;
   description?: string;
   pathWithoutLocale: string;
   fullPath: string;
   locale: Locale;
   ogImage?: string;
+  /** Intrinsic OG image size — emitted as og:image:width/height. */
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  /** Emitted as og:image:alt + twitter:image:alt. */
+  ogImageAlt?: string;
   type?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
@@ -171,14 +183,23 @@ function buildJsonLd(args: BuildSeoArgs, meta: Omit<SeoMeta, 'jsonLd'>): JsonLdV
 
 /** Build the SEO data block consumed by `<SEO />`. */
 export function buildSeo(args: BuildSeoArgs): SeoMeta {
-  const title =
-    args.title && args.title !== SITE.title ? `${args.title} — ${SITE.title}` : SITE.title;
+  const title = args.absoluteTitle
+    ? (args.title ?? SITE.title)
+    : args.title && args.title !== SITE.title
+      ? `${args.title} — ${SITE.title}`
+      : SITE.title;
   const canonical = args.canonicalURL ?? absoluteUrl(args.fullPath);
+  // Generated OG images (site default + per-post fallbacks) are always
+  // 1200×630 PNGs; the SVG fallback has no fixed intrinsic size.
+  const usingDefaultOg = !args.ogImage && SITE.defaultOgImage.endsWith('.png');
   const meta: Omit<SeoMeta, 'jsonLd'> = {
     title,
     description: args.description ?? SITE.description,
     canonical,
     ogImage: absoluteUrl(args.ogImage ?? SITE.defaultOgImage),
+    ogImageWidth: args.ogImageWidth ?? (usingDefaultOg ? 1200 : undefined),
+    ogImageHeight: args.ogImageHeight ?? (usingDefaultOg ? 630 : undefined),
+    ogImageAlt: args.ogImageAlt ?? args.title ?? SITE.title,
     ogLocale: htmlLang(args.locale).replace('-', '_'),
     type: args.type ?? 'website',
     publishedTime: args.publishedTime?.toISOString(),

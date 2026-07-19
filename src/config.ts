@@ -33,6 +33,15 @@ const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? '';
 const THEME_REPO_URL = 'https://github.com/kannansuresh/chirping-astro';
 
 /**
+ * Master switch for generated OG images. When `true`, the site-wide
+ * fallback `og:image` is a build-time generated 1200×630 PNG (served
+ * from `/og/site-default.png`) because social crawlers (Facebook, X,
+ * LinkedIn, WhatsApp, Slack) cannot render SVG OG images. When
+ * `false`, the theme falls back to the static `og-default.svg`.
+ */
+const AUTO_OG_IMAGE = true;
+
+/**
  * Public GitHub coordinates of the deployed source. Useful for custom links
  * and integrations that need a repository URL. When
  * `PUBLIC_GITHUB_HANDLE` is unset, `url` falls back to a safe default so
@@ -51,8 +60,11 @@ export const SITE: SiteConfig = {
 
   /** Default site title used as homepage <title> and meta. */
   title: 'LogCTL',
-  /** Site tagline / description. */
-  description: 'A control interface for engineering thoughts.',
+  /** Site description — used as the default meta description, RSS
+   *  channel description and WebSite JSON-LD. Keep it keyword-rich:
+   *  this is what search engines show for the homepage. */
+  description:
+    'Deep-dives on AI systems, software engineering, Linux, infrastructure, and developer tooling — by Ravi Kumar Singh.',
   /** Author/handle shown in footer + meta. */
   author: {
     name: 'Ravi Kumar Singh',
@@ -60,8 +72,9 @@ export const SITE: SiteConfig = {
     avatar: avatarImg,
     bio: 'A control interface for engineering thoughts.',
   },
-  /** Default OG image. */
-  defaultOgImage: ogDefaultImg.src,
+  /** Default OG image. PNG generated at build time when AUTO_OG_IMAGE
+   *  is on (social crawlers can't render SVG); SVG asset otherwise. */
+  defaultOgImage: AUTO_OG_IMAGE ? '/og/site-default.png' : ogDefaultImg.src,
   /** Number of posts per page on listings. */
   postsPerPage: 8,
   /** Display ISO 8601 date format if true, otherwise locale-aware. */
@@ -73,7 +86,7 @@ export const SITE: SiteConfig = {
   /** Allow listing cards to grow when title/description content is longer. */
   dynamicPostCardHeight: false,
   /** Automatically generate Open Graph images for posts that don't have a `heroImage`. */
-  autoOgImage: true,
+  autoOgImage: AUTO_OG_IMAGE,
   /** Show a link to the Privacy Policy page in the footer. */
   showPrivacyPolicy: true,
   /** Footer text/link controls. */
