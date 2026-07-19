@@ -16,8 +16,12 @@ import { buildSeo, type SeoMeta } from '../utils/seo';
 
 interface Props {
   title?: string;
+  /** Use `title` verbatim (no " — Site" suffix). For the homepage. */
+  absoluteTitle?: boolean;
   description?: string;
   ogImage?: string;
+  /** Emit <meta name="robots" content="noindex, nofollow">. */
+  noindex?: boolean;
   /** Logical path WITHOUT locale prefix (used for hreflang). */
   pathWithoutLocale?: string;
   type?: 'website' | 'article';
@@ -42,8 +46,10 @@ interface Props {
 
 const {
   title,
+  absoluteTitle = false,
   description,
   ogImage,
+  noindex = false,
   type = 'website',
   publishedTime,
   modifiedTime,
@@ -64,11 +70,13 @@ const meta: SeoMeta =
   seo ??
   buildSeo({
     title,
+    absoluteTitle,
     description,
     pathWithoutLocale,
     fullPath: Astro.url.pathname,
     locale,
     ogImage,
+    noindex,
     type,
     publishedTime,
     modifiedTime,
