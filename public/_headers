@@ -1,0 +1,20 @@
+# Netlify custom headers — https://docs.netlify.com/routing/headers/
+# Netlify's default is `Cache-Control: public, max-age=0, must-revalidate`
+# for EVERYTHING, which forces revalidation of fingerprinted assets on
+# every visit. The rules below fix caching for immutable build output
+# and add baseline security headers.
+
+# Astro/Vite build assets are content-hashed — safe to cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Generated Open Graph images are deterministic per build.
+/og/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Baseline security headers for all responses.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
