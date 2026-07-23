@@ -3,7 +3,6 @@ title: 'AI Speeds Up Coding, Not Engineering'
 description: 'An opinionated workflow for building good-enough software with AI coding agents without surrendering architecture, judgment, or security.'
 pubDate: 2026-07-23
 heroImage: '../../../assets/images/posts/ai-coding-guide.png'
-heroImageAlt: 'A developer reviewing a coding agent diff against PRD, PLAN, TRACKER, and AGENTS files on a dual-monitor workstation, with architecture, tests, and security panels visible.'
 categories: ['AI', 'Software Engineering']
 tags:
   [
