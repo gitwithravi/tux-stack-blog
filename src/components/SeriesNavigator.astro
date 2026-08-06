@@ -1,0 +1,149 @@
+---
+import { Icon } from 'astro-icon/components';
+import { localizedPath } from '../i18n/utils';
+import { seriesPostPath, type SeriesMembership } from '../utils/series';
+
+interface Props {
+  membership: SeriesMembership;
+  variant: 'header' | 'footer';
+}
+
+const { membership, variant } = Astro.props;
+const { series, part, previous, next } = membership;
+const hubHref = localizedPath(series.path, series.locale);
+const partHref = (target: typeof part) => localizedPath(seriesPostPath(target), series.locale);
+---
+
+{
+  variant === 'header' ? (
+    <nav
+      aria-label={`${series.title} series`}
+      class="border-primary/25 bg-primary/5 mb-8 rounded-xl border p-4 sm:p-5"
+    >
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="bg-primary/12 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg">
+            <Icon name="lucide:library-big" width={18} height={18} />
+          </span>
+          <div class="min-w-0">
+            <p class="text-base-content/60 text-xs font-bold tracking-[0.12em] uppercase">
+              Part {part.order} of {series.parts.length}
+            </p>
+            <p class="text-base-content truncate font-bold">{series.title}</p>
+          </div>
+        </div>
+        <a
+          href={hubHref}
+          class="text-primary inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
+        >
+          View the complete guide
+          <Icon name="lucide:arrow-up-right" width={15} height={15} />
+        </a>
+      </div>
+
+      <ol class="mt-4 grid grid-cols-5 gap-2">
+        {series.parts.map((item) => (
+          <li>
+            <a
+              href={partHref(item)}
+              aria-current={item.order === part.order ? 'page' : undefined}
+              title={`Part ${item.order}: ${item.title}`}
+              class:list={[
+                'flex min-h-10 items-center justify-center gap-2 rounded-lg border px-2 py-2 text-sm font-bold transition',
+                item.order === part.order
+                  ? 'border-primary bg-primary text-primary-content'
+                  : 'border-base-300 bg-base-100 text-base-content/65 hover:border-primary/50 hover:text-primary',
+              ]}
+            >
+              <span>{item.order}</span>
+              <span class="hidden lg:inline">{item.stage}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  ) : (
+    <nav
+      aria-label={`${series.title} series navigation`}
+      class="border-base-300 mt-10 border-t pt-6"
+    >
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p class="text-base-content/55 text-xs font-bold tracking-[0.12em] uppercase">
+            Continue the field guide
+          </p>
+          <p class="text-base-content mt-1 font-bold">
+            {series.title} · Part {part.order} of {series.parts.length}
+          </p>
+        </div>
+        <a
+          href={hubHref}
+          class="text-primary inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
+        >
+          All five parts
+          <Icon name="lucide:layout-list" width={15} height={15} />
+        </a>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        {previous ? (
+          <a
+            href={partHref(previous)}
+            rel="prev"
+            class="card border-base-300 bg-base-200 hover:bg-base-300 border transition-colors"
+          >
+            <div class="card-body gap-2 p-5">
+              <p class="text-base-content/60 flex items-center gap-1 text-xs font-bold tracking-wide uppercase">
+                <Icon name="lucide:arrow-left" width={13} height={13} />
+                Previous · Part {previous.order}
+              </p>
+              <p class="font-semibold">{previous.title}</p>
+            </div>
+          </a>
+        ) : (
+          <a
+            href={hubHref}
+            class="card border-base-300 bg-base-200 hover:bg-base-300 border transition-colors"
+          >
+            <div class="card-body gap-2 p-5">
+              <p class="text-base-content/60 flex items-center gap-1 text-xs font-bold tracking-wide uppercase">
+                <Icon name="lucide:map" width={13} height={13} />
+                Series overview
+              </p>
+              <p class="font-semibold">See the complete reading path</p>
+            </div>
+          </a>
+        )}
+
+        {next ? (
+          <a
+            href={partHref(next)}
+            rel="next"
+            class="card border-base-300 bg-base-200 hover:bg-base-300 border transition-colors sm:text-right"
+          >
+            <div class="card-body gap-2 p-5">
+              <p class="text-base-content/60 flex items-center justify-end gap-1 text-xs font-bold tracking-wide uppercase">
+                Next · Part {next.order}
+                <Icon name="lucide:arrow-right" width={13} height={13} />
+              </p>
+              <p class="font-semibold">{next.title}</p>
+            </div>
+          </a>
+        ) : (
+          <a
+            href={hubHref}
+            class="card border-primary/30 bg-primary/5 hover:bg-primary/10 border transition-colors sm:text-right"
+          >
+            <div class="card-body gap-2 p-5">
+              <p class="text-primary flex items-center justify-end gap-1 text-xs font-bold tracking-wide uppercase">
+                Series complete
+                <Icon name="lucide:circle-check-big" width={13} height={13} />
+              </p>
+              <p class="font-semibold">Return to the field guide</p>
+            </div>
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}

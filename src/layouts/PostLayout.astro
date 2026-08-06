@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PostNav from '../components/PostNav.astro';
+import SeriesNavigator from '../components/SeriesNavigator.astro';
 import SmartImage from '../components/SmartImage.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
@@ -20,6 +21,7 @@ import {
   heroImageSrc,
   shouldShowHero,
 } from '../utils/posts';
+import { findSeriesMembership } from '../utils/series';
 import { buildSeo } from '../utils/seo';
 import type { MarkdownHeading } from 'astro';
 
@@ -55,6 +57,7 @@ const heroSrc = heroImageSrc(post);
 const heroAsset = heroImage(post);
 const showHero = shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
+const seriesMembership = findSeriesMembership(locale, postSlug(post));
 
 const articleClass = SITE.boxedArticles
   ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
@@ -171,6 +174,8 @@ const seo = buildSeo({
       </div>
     </header>
 
+    {seriesMembership && <SeriesNavigator membership={seriesMembership} variant="header" />}
+
     {
       showHero && heroAsset && (
         <figure class="post-hero mb-8">
@@ -211,7 +216,13 @@ const seo = buildSeo({
       )
     }
 
-    <PostNav prev={prev} next={next} locale={locale} />
+    {
+      seriesMembership ? (
+        <SeriesNavigator membership={seriesMembership} variant="footer" />
+      ) : (
+        <PostNav prev={prev} next={next} locale={locale} />
+      )
+    }
 
     {
       commentsEnabled ? (

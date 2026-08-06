@@ -54,6 +54,7 @@ Markdown authoring also includes two custom remark code-block transforms:
     ├── content.config.ts      # Zod schema — post + page frontmatter
     ├── env.d.ts               # Astro env type shim
     ├── components/
+    │   ├── SeriesNavigator.astro # Static in-article navigation for curated series
     │   └── islands/           # Client-hydrated Astro islands
     │       ├── ThemeToggle.astro
     │       ├── LanguageSwitcher.astro
@@ -86,12 +87,14 @@ Markdown authoring also includes two custom remark code-block transforms:
     │   ├── posts/[...slug].astro
     │   ├── tags/{index,[tag]}.astro
     │   ├── categories/{index,[category]}.astro
+    │   ├── ai-native-software-engineering.astro # Curated five-part series hub
     │   └── <locale>/          # One sub-folder per non-default locale (mirrors root)
     ├── styles/global.css      # Tailwind v4 entry + daisyUI themes + CSS tokens
     └── utils/
         ├── posts.ts           # Collection helpers: sort, filter, paginate
         ├── reading-time.ts
         ├── seo.ts
+        ├── series.ts          # Curated series metadata, entry points, and ordering
         └── slugify.ts         # Unicode-aware tag/category URL slugifier
 ```
 
@@ -494,6 +497,21 @@ These are **CI-only**. Never set them in `.env` for local builds.
 ---
 
 ## Common Agent Tasks
+
+### Update the AI-native software engineering series
+
+1. Treat `src/utils/series.ts` as the single source of truth for the hub,
+   role-based entry points, article ordering, summaries, and navigator links.
+2. Keep every manifest slug aligned with its file under
+   `src/content/posts/<locale>/`; the hub deliberately avoids content collection
+   reads so it still builds in the PR fast mode.
+3. The social landing page lives at
+   `src/pages/[...locale]/ai-native-software-engineering.astro`. It is
+   indexable and included in Pagefind and the sitemap, but intentionally absent
+   from `NAV` and homepage promotion.
+4. Run the series unit tests and a full production build after changing the
+   order or membership. Verify the first/last boundary links and the current-part
+   state in `SeriesNavigator.astro`.
 
 ### Add a new blog post
 1. Create `src/content/posts/<locale>/<slug>.md` (or `.mdx` for components/JS).
